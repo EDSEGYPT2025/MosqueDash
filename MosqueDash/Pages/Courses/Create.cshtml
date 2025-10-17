@@ -1,0 +1,74 @@
+﻿@page
+@model MosqueDash.Pages.Courses.CreateModel
+@{
+    ViewData["Title"] = "إضافة دورة جديدة";
+}
+
+<div class="bg-white p-6 md:p-8 rounded-lg shadow-md max-w-3xl mx-auto">
+    <h1 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-6">بيانات الدورة الجديدة</h1>
+
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-red-600 text-sm mb-4 bg-red-50 p-3 rounded-md"></div>
+
+        <div class="space-y-6">
+            <!-- Course Name -->
+            <div>
+                <label asp-for="Course.Name" class="block text-sm font-medium text-gray-700 mb-1">اسم الدورة</label>
+                <input asp-for="Course.Name" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                <span asp-validation-for="Course.Name" class="text-red-500 text-xs mt-1"></span>
+            </div>
+
+            <!-- Department & Manager -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label asp-for="Course.Department" class="block text-sm font-medium text-gray-700 mb-1">القسم</label>
+                    <input asp-for="Course.Department" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="مثال: علوم القرآن" />
+                    <span asp-validation-for="Course.Department" class="text-red-500 text-xs mt-1"></span>
+                </div>
+                <div>
+                    <label asp-for="Course.Manager" class="block text-sm font-medium text-gray-700 mb-1">المسؤول عن الدورة</label>
+                    <input asp-for="Course.Manager" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                    <span asp-validation-for="Course.Manager" class="text-red-500 text-xs mt-1"></span>
+                </div>
+            </div>
+
+            <!-- Curriculum -->
+            <div>
+                <label asp-for="Course.Curriculum" class="block text-sm font-medium text-gray-700 mb-1">المنهج</label>
+                <input asp-for="Course.Curriculum" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="مثال: جزء عم، الأربعون النووية" />
+                <span asp-validation-for="Course.Curriculum" class="text-red-500 text-xs mt-1"></span>
+            </div>
+
+            <!-- Start & End Date -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label asp-for="Course.StartDate" class="block text-sm font-medium text-gray-700 mb-1">تاريخ البدء</label>
+                    <input asp-for="Course.StartDate" type="date" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                    <span asp-validation-for="Course.StartDate" class="text-red-500 text-xs mt-1"></span>
+                </div>
+                <div>
+                    <label asp-for="Course.EndDate" class="block text-sm font-medium text-gray-700 mb-1">تاريخ الانتهاء</label>
+                    <input asp-for="Course.EndDate" type="date" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                    <span asp-validation-for="Course.EndDate" class="text-red-500 text-xs mt-1"></span>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div>
+                <label asp-for="Course.Description" class="block text-sm font-medium text-gray-700 mb-1">وصف الدورة</label>
+                <textarea asp-for="Course.Description" rows="4" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+                <span asp-validation-for="Course.Description" class="text-red-500 text-xs mt-1"></span>
+            </div>
+        </div>
+
+        <div class="mt-8 flex justify-end gap-4">
+            <a asp-page="Index" class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-800 font-semibold text-sm rounded-md shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors">
+                إلغاء
+            </a>
+            <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white font-semibold text-sm rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                إنشاء الدورة
+            </button>
+        </div>
+    </form>
+</div>
+

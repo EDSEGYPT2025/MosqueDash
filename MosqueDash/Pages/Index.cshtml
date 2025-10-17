@@ -1,0 +1,93 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "لوحة التحكم";
+    ViewData["PageTitle"] = "لوحة التحكم الرئيسية";
+}
+
+<div class="container mx-auto">
+    <!-- Stat Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <!-- Card 1: Total Students -->
+        <div class="bg-white rounded-lg shadow-md p-6 flex items-center">
+            <div class="bg-blue-500 rounded-full p-3">
+                <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+            </div>
+            <div class="mr-4">
+                <p class="text-gray-500">إجمالي الطلاب</p>
+                <p class="text-2xl font-bold text-gray-800">@Model.TotalStudents</p>
+            </div>
+        </div>
+
+        <!-- Card 2: Active Courses -->
+        <div class="bg-white rounded-lg shadow-md p-6 flex items-center">
+            <div class="bg-emerald-500 rounded-full p-3">
+                <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 14l9-5-9-5-9 5 9 5z" /><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-5.998 12.078 12.078 0 01.665-6.479L12 14z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-5.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222 4 2.222V20M12 12L8 10l4-2 4 2-4 2z" /></svg>
+            </div>
+            <div class="mr-4">
+                <p class="text-gray-500">الدورات النشطة</p>
+                <p class="text-2xl font-bold text-gray-800">@Model.ActiveCourses</p>
+            </div>
+        </div>
+
+        <!-- Card 3: Total Enrollments -->
+        <div class="bg-white rounded-lg shadow-md p-6 flex items-center">
+            <div class="bg-amber-500 rounded-full p-3">
+                <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-12v4m-2-2h4m5 4v4m-2-2h4M5 3a2 2 0 00-2 2v1h16V5a2 2 0 00-2-2H5zm14 4H5a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2z" /></svg>
+            </div>
+            <div class="mr-4">
+                <p class="text-gray-500">إجمالي التسجيلات</p>
+                <p class="text-2xl font-bold text-gray-800">@Model.TotalEnrollments</p>
+            </div>
+        </div>
+
+        <!-- Card 4: Attendance Report Link -->
+        <a href="/Reports/Attendance" class="bg-white rounded-lg shadow-md p-6 flex items-center hover:bg-gray-50 transition-colors">
+            <div class="bg-rose-500 rounded-full p-3">
+                <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+            </div>
+            <div class="mr-4">
+                <p class="text-gray-500">عرض تقرير الحضور</p>
+                <p class="text-2xl font-bold text-gray-800">@Model.TotalAttendanceRecords <span class="text-base font-normal">سجل</span></p>
+            </div>
+        </a>
+    </div>
+
+    <!-- Recent Activity Table -->
+    <div class="bg-white rounded-lg shadow-md mt-8">
+        <div class="p-4 border-b">
+            <h2 class="text-lg font-semibold text-gray-700">أحدث الطلاب المسجلين</h2>
+        </div>
+        <div class="p-4">
+            <table class="min-w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">اسم الطالب</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">العمر</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">تاريخ الإضافة</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @if (Model.RecentStudents.Any())
+                    {
+                        @foreach (var student in Model.RecentStudents)
+                        {
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">@student.Name</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">@student.Age</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">@student.Id</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="3" class="text-center py-4 text-gray-500">لا يوجد طلاب مضافون حديثاً.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

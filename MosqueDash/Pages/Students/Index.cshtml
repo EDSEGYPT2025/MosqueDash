@@ -1,0 +1,67 @@
+﻿@page
+@model MosqueDash.Pages.Students.IndexModel
+@{
+    ViewData["Title"] = "إدارة الطلاب";
+    ViewData["PageTitle"] = "قائمة الطلاب";
+}
+
+<div class="container mx-auto">
+    <div class="bg-white rounded-lg shadow-md">
+        <div class="p-4 border-b">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-gray-700">جميع الطلاب المسجلين</h2>
+                <a asp-page="Create" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition duration-200 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    إضافة طالب جديد
+                </a>
+            </div>
+            <!-- Search Form -->
+            <form method="get" class="mt-4">
+                <div class="flex">
+                    <input type="text" name="SearchTerm" value="@Model.SearchTerm" placeholder="ابحث بالاسم أو رقم الهاتف..." class="flex-grow px-3 py-2 bg-white border border-gray-300 rounded-r-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" />
+                    <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded-l-lg hover:bg-emerald-700 transition duration-200">بحث</button>
+                </div>
+            </form>
+        </div>
+        <div class="p-4">
+            <table class="min-w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">اسم الطالب</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">اسم ولي الأمر</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">العمر</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">رقم الهاتف</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">الدورات المسجل بها</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">إجراءات</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach (var student in Model.Students)
+                    {
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <!-- Student name is now a link to the details page -->
+                                <a asp-page="./Details" asp-route-id="@student.Id" class="text-indigo-600 hover:text-indigo-900 font-semibold">
+                                    @student.Name
+                                </a>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">@student.GuardianName</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">@student.Age</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">@student.PhoneNumber</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 text-center">@student.Enrollments.Count</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium space-x-4">
+                                <a asp-page="./Details" asp-route-id="@student.Id" class="text-green-600 hover:text-green-900">تفاصيل</a>
+                                <a asp-page="Enroll" asp-route-id="@student.Id" class="text-indigo-600 hover:text-indigo-900">تسجيل</a>
+                                <a asp-page="./Edit" asp-route-id="@student.Id" class="text-sky-600 hover:text-sky-900">تعديل</a>
+                                <a asp-page="./Delete" asp-route-id="@student.Id" class="text-red-600 hover:text-red-900">حذف</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,83 @@
+﻿@page "{id:int}"
+@model MosqueDash.Pages.Students.DetailsModel
+@{
+    ViewData["Title"] = "تفاصيل الطالب";
+    ViewData["PageTitle"] = $"ملف الطالب: {Model.Student.Name}";
+}
+
+<div class="container mx-auto">
+    <!-- Student Information Card -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-xl font-bold text-gray-800 border-b pb-3 mb-4">البيانات الأساسية</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-sm">
+            <div>
+                <span class="font-semibold text-gray-500">الاسم الكامل:</span>
+                <span class="text-gray-800 mr-2">@Model.Student.Name</span>
+            </div>
+            <div>
+                <span class="font-semibold text-gray-500">العمر:</span>
+                <span class="text-gray-800 mr-2">@Model.Student.Age سنة</span>
+            </div>
+            <div>
+                <span class="font-semibold text-gray-500">اسم ولي الأمر:</span>
+                <span class="text-gray-800 mr-2">@Model.Student.GuardianName</span>
+            </div>
+            <div>
+                <span class="font-semibold text-gray-500">رقم الهاتف:</span>
+                <span class="text-gray-800 mr-2">@Model.Student.PhoneNumber</span>
+            </div>
+            <div class="col-span-2">
+                <span class="font-semibold text-gray-500">ملاحظات:</span>
+                <p class="text-gray-800 mt-1">@(string.IsNullOrEmpty(Model.Student.Notes) ? "لا يوجد" : Model.Student.Notes)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enrolled Courses and Attendance -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-bold text-gray-800 border-b pb-3 mb-4">الدورات المسجل بها وسجل الحضور</h2>
+
+        @if (Model.Student.Enrollments != null && Model.Student.Enrollments.Any())
+        {
+            <div class="space-y-6">
+                @foreach (var enrollment in Model.Student.Enrollments)
+                {
+                    <div class="border rounded-lg p-4">
+                        <h3 class="font-bold text-lg text-emerald-700">@enrollment.Course.Name</h3>
+
+                        @{
+                            var totalDays = enrollment.Attendances.Count;
+                            var presentDays = enrollment.Attendances.Count(a => a.IsPresent);
+                            var absentDays = totalDays - presentDays;
+                            var percentage = Model.AttendancePercentages[enrollment.Id];
+                        }
+
+                        <!-- Attendance Stats -->
+                        <div class="my-3 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                            <div class="p-2 bg-blue-50 rounded-md">
+                                <div class="text-2xl font-bold text-blue-600">@totalDays</div>
+                                <div class="text-xs text-gray-500">إجمالي الأيام</div>
+                            </div>
+                            <div class="p-2 bg-green-50 rounded-md">
+                                <div class="text-2xl font-bold text-green-600">@presentDays</div>
+                                <div class="text-xs text-gray-500">أيام الحضور</div>
+                            </div>
+                            <div class="p-2 bg-red-50 rounded-md">
+                                <div class="text-2xl font-bold text-red-600">@absentDays</div>
+                                <div class="text-xs text-gray-500">أيام الغياب</div>
+                            </div>
+                            <div class="p-2 bg-indigo-50 rounded-md">
+                                <div class="text-2xl font-bold text-indigo-600">@percentage.ToString("0")%</div>
+                                <div class="text-xs text-gray-500">نسبة الحضور</div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-gray-500">الطالب غير مسجل في أي دورة حاليًا.</p>
+        }
+    </div>
+</div>

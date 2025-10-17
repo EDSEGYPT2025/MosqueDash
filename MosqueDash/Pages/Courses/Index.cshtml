@@ -1,0 +1,87 @@
+﻿@page
+@model MosqueDash.Pages.Courses.IndexModel
+@{
+    ViewData["Title"] = "إدارة الدورات";
+    ViewData["PageTitle"] = "قائمة الدورات";
+}
+
+<div class="bg-white p-6 md:p-8 rounded-lg shadow-md">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">قائمة الدورات</h1>
+        <a asp-page="Create" class="mt-4 sm:mt-0 inline-flex items-center px-4 py-2 bg-indigo-600 text-white font-semibold text-sm rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+            <svg class="w-5 h-5 mr-2 -ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+            </svg>
+            إضافة دورة جديدة
+        </a>
+    </div>
+
+    <!-- Search Form -->
+    <form method="get" class="mb-6">
+        <div class="flex">
+            <input type="text" name="SearchTerm" value="@Model.CurrentSearch" class="flex-grow px-3 py-2 bg-white border border-gray-300 rounded-r-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="ابحث عن دورة بالاسم أو القسم..." />
+            <button type="submit" class="px-4 py-2 bg-indigo-600 text-white font-semibold text-sm rounded-l-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                بحث
+            </button>
+        </div>
+    </form>
+
+    <!-- Courses Table -->
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">اسم الدورة</th>
+                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">القسم</th>
+                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">تاريخ البدء</th>
+                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">تاريخ الانتهاء</th>
+                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">عدد الطلاب</th>
+                    <th scope="col" class="relative px-6 py-3">
+                        <span class="sr-only">Actions</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                @foreach (var course in Model.Courses)
+                {
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <a asp-page="./Details" asp-route-id="@course.Id" class="text-sm font-medium text-indigo-600 hover:text-indigo-900">
+                                @course.Name
+                            </a>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-700">@course.Department</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-700">@course.StartDate?.ToString("dd/MM/yyyy")</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-700">@course.EndDate?.ToString("dd/MM/yyyy")</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center">
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                @course.Enrollments.Count
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
+                            <div class="flex items-center justify-end space-x-4">
+                                <a asp-page="./Details" asp-route-id="@course.Id" class="text-sky-600 hover:text-sky-900 transition-colors">تفاصيل</a>
+                                <a asp-page="./Edit" asp-route-id="@course.Id" class="text-indigo-600 hover:text-indigo-900 transition-colors">تعديل</a>
+                                @if (course.Enrollments.Count == 0)
+                                {
+                                    <a asp-page="./Delete" asp-route-id="@course.Id" class="text-red-600 hover:text-red-900 transition-colors">حذف</a>
+                                }
+                                else
+                                {
+                                    <span class="text-gray-400 cursor-not-allowed" title="لا يمكن حذف دورة مسجل بها طلاب">حذف</span>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

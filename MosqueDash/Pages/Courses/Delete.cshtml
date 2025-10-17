@@ -1,0 +1,48 @@
+﻿@page "{id:int}"
+@model MosqueDash.Pages.Courses.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete Course";
+}
+
+<div class="bg-white p-6 md:p-8 rounded-lg shadow-md">
+    <h1 class="text-2xl font-bold text-gray-800 mb-2">حذف دورة</h1>
+    <p class="text-red-600 mb-6">هل أنت متأكد أنك تريد حذف هذه الدورة؟ لا يمكن التراجع عن هذا الإجراء.</p>
+
+    <div>
+        <h4 class="text-lg font-semibold text-gray-700 border-b pb-2 mb-4">@Html.DisplayFor(model => model.Course.Name)</h4>
+        <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+            <div class="col-span-1">
+                <dt class="text-sm font-medium text-gray-500">القسم</dt>
+                <dd class="mt-1 text-sm text-gray-900">@Html.DisplayFor(model => model.Course.Department)</dd>
+            </div>
+            <div class="col-span-1">
+                <dt class="text-sm font-medium text-gray-500">المسؤول</dt>
+                <dd class="mt-1 text-sm text-gray-900">@Html.DisplayFor(model => model.Course.Manager)</dd>
+            </div>
+            <div class="col-span-1">
+                <dt class="text-sm font-medium text-gray-500">تاريخ البدء</dt>
+                <dd class="mt-1 text-sm text-gray-900">@Model.Course.StartDate?.ToString("yyyy-MM-dd")</dd>
+            </div>
+            <div class="col-span-1">
+                <dt class="text-sm font-medium text-gray-500">تاريخ الانتهاء</dt>
+                <dd class="mt-1 text-sm text-gray-900">@Model.Course.EndDate?.ToString("yyyy-MM-dd")</dd>
+            </div>
+        </dl>
+    </div>
+
+    <form method="post" class="mt-6">
+        <input type="hidden" asp-for="Course.Id" />
+        <div class="flex items-center gap-4">
+            <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 text-white font-semibold text-sm rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" />
+                </svg>
+                حذف
+            </button>
+            <a asp-page="./Index" class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 font-semibold text-sm rounded-md shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors">
+                إلغاء
+            </a>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,174 @@
+﻿@page
+@model MosqueDash.Pages.Reports.AttendanceModel
+@{
+    ViewData["Title"] = "تقرير الحضور والغياب";
+    ViewData["PageTitle"] = "تقرير الحضور";
+}
+
+<div class="container mx-auto">
+    <div class="bg-white rounded-lg shadow-md" id="report-container">
+        <div class="p-4 border-b print-hide">
+            <h2 class="text-lg font-semibold text-gray-700">تقرير الحضور والغياب</h2>
+        </div>
+
+        <!-- Filter Form -->
+        <div class="p-4 bg-gray-50 border-b print-hide">
+            <form method="get" class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+                <!-- Course Filter -->
+                <div>
+                    <label for="SelectedCourseId" class="block text-sm font-medium text-gray-700">الدورة</label>
+                    <select asp-for="SelectedCourseId" asp-items="Model.CourseList" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm rounded-md">
+                        <option value="">كل الدورات</option>
+                    </select>
+                </div>
+
+                <!-- Start Date Filter -->
+                <div>
+                    <label asp-for="StartDate" class="block text-sm font-medium text-gray-700">من تاريخ</label>
+                    <input asp-for="StartDate" type="date" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" />
+                </div>
+
+                <!-- End Date Filter -->
+                <div>
+                    <label asp-for="EndDate" class="block text-sm font-medium text-gray-700">إلى تاريخ</label>
+                    <input asp-for="EndDate" type="date" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" />
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button type="submit" class="w-full bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition duration-200">
+                        بحث
+                    </button>
+                </div>
+                <!-- Print Button -->
+                <div>
+                    <button type="button" onclick="window.print()" class="w-full bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700 transition duration-200">
+                        طباعة التقرير
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Report Header for Printing -->
+        <div class="hidden print-show p-4 text-center border-b">
+            <img src="/images/logo.jpg" class="mx-auto h-20" alt="شعار المسجد" />
+            <h1 class="text-xl font-bold mt-2">تقرير الحضور والغياب</h1>
+            <p class="text-sm text-gray-600">مسجد الخليل ابراهيم - @DateTime.Now.ToString("yyyy-MM-dd")</p>
+        </div>
+
+        <!-- Attendance Table -->
+        <div class="p-4">
+            <table class="min-w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">اسم الطالب</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الدورة</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">التاريخ</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">الحالة</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach (var item in Model.Attendances)
+                    {
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">@item.Enrollment.Student.Name</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">@item.Enrollment.Course.Name</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">@item.Date.ToString("yyyy-MM-dd")</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+                                @if (item.IsPresent)
+                                {
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">حاضر</span>
+                                }
+                                else
+                                {
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">غائب</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="p-4 border-t print-hide">
+            @{
+                var prevDisabled = !Model.Attendances.HasPreviousPage ? "opacity-50 cursor-not-allowed" : "";
+                var nextDisabled = !Model.Attendances.HasNextPage ? "opacity-50 cursor-not-allowed" : "";
+            }
+
+            <div class="flex justify-between items-center">
+                <a asp-page="./Attendance"
+                   asp-route-pageIndex="@(Model.Attendances.PageIndex - 1)"
+                   asp-route-SelectedCourseId="@Model.SelectedCourseId"
+                   asp-route-StartDate="@Model.StartDate?.ToString("yyyy-MM-dd")"
+                   asp-route-EndDate="@Model.EndDate?.ToString("yyyy-MM-dd")"
+                   class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 @prevDisabled">
+                    السابق
+                </a>
+
+                <span>
+                    صفحة @Model.Attendances.PageIndex من @Model.Attendances.TotalPages
+                </span>
+
+                <a asp-page="./Attendance"
+                   asp-route-pageIndex="@(Model.Attendances.PageIndex + 1)"
+                   asp-route-SelectedCourseId="@Model.SelectedCourseId"
+                   asp-route-StartDate="@Model.StartDate?.ToString("yyyy-MM-dd")"
+                   asp-route-EndDate="@Model.EndDate?.ToString("yyyy-MM-dd")"
+                   class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 @nextDisabled">
+                    التالي
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .print-show {
+            display: none;
+        }
+
+        @@media print {
+            /* إخفاء كل العناصر ما عدا محتوى التقرير */
+            body > .flex.h-screen > aside,
+            body > .flex.h-screen > .flex-1 > header,
+            .print-hide {
+                display: none !important;
+            }
+            /* التأكد من أن المحتوى الرئيسي يأخذ كامل عرض الصفحة */
+            main {
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            #report-container {
+                box-shadow: none !important;
+                border: none !important;
+            }
+
+            .print-show {
+                display: block;
+            }
+            /* تنسيقات العلامة المائية */
+            body::after {
+                content: "";
+                background-image: url('/images/logo.jpg');
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: contain;
+                position: fixed; /* لتثبيت العلامة المائية في الصفحة */
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 70vw; /* عرض العلامة المائية */
+                height: 70vh; /* ارتفاع العلامة المائية */
+                opacity: 0.1; /* درجة الشفافية */
+                z-index: -1; /* لوضعها خلف المحتوى */
+                pointer-events: none; /* لمنع تفاعل الفأرة معها */
+            }
+        }
+    </style>
+}
+

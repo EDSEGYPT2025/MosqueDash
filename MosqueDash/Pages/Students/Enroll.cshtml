@@ -1,0 +1,44 @@
+﻿@page "{id:int}"
+@model MosqueDash.Pages.Students.EnrollModel
+@{
+    ViewData["Title"] = "تسجيل الطالب في الدورات";
+    ViewData["PageTitle"] = $"تسجيل: {Model.Student.Name}";
+}
+
+<div class="container mx-auto">
+    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md">
+        <div class="p-4 border-b">
+            <h2 class="text-lg font-semibold text-gray-700">اختر الدورات التي سيلتحق بها الطالب</h2>
+        </div>
+        <div class="p-6">
+            <form method="post">
+                <input type="hidden" asp-for="Student.Id" />
+                <div asp-validation-summary="ModelOnly" class="text-red-600 text-sm mb-4"></div>
+
+                <div class="space-y-4">
+                    <h3 class="text-md font-medium text-gray-800">قائمة الدورات المتاحة:</h3>
+                    @foreach (var course in Model.AllCourses)
+                    {
+                        <div class="flex items-center p-3 rounded-md border border-gray-200 hover:bg-gray-50">
+                            <input type="checkbox" name="SelectedCourseIds" value="@course.Id"
+                                   class="h-5 w-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                                   id="course-@course.Id" @(Model.EnrolledCourseIds.Contains(course.Id) ? "checked" : "") />
+                            <label for="course-@course.Id" class="mr-3 block text-sm font-medium text-gray-700">
+                                @course.Name <span class="text-xs text-gray-500">(@course.Department)</span>
+                            </label>
+                        </div>
+                    }
+                </div>
+
+                <div class="mt-8 flex justify-end">
+                    <a asp-page="Index" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition duration-200 mr-2">
+                        إلغاء
+                    </a>
+                    <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition duration-200">
+                        حفظ التسجيل
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

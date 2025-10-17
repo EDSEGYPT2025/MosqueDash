@@ -1,0 +1,92 @@
+﻿@page "{id:int}"
+@model MosqueDash.Pages.Courses.DetailsModel
+@{
+    ViewData["Title"] = "تفاصيل الدورة";
+    ViewData["PageTitle"] = "تفاصيل وتقييم الدورة";
+}
+
+<div class="container mx-auto">
+    <!-- Course Details Card -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h1 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-4">@Model.Course.Name</h1>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div><strong>القسم:</strong> @Model.Course.Department</div>
+            <div><strong>المسؤول:</strong> @Model.Course.Manager</div>
+            <div><strong>عدد الطلاب:</strong> @Model.Course.Enrollments.Count</div>
+            <div><strong>تاريخ البدء:</strong> @Model.Course.StartDate?.ToString("yyyy-MM-dd")</div>
+            <div><strong>تاريخ الانتهاء:</strong> @Model.Course.EndDate?.ToString("yyyy-MM-dd")</div>
+        </div>
+    </div>
+
+    <!-- Student Evaluation Table -->
+    <div class="bg-white rounded-lg shadow-md">
+        <div class="p-4 border-b">
+            <h2 class="text-lg font-semibold text-gray-700">تقييم الطلاب المسجلين</h2>
+        </div>
+        <div class="p-4">
+            @if (Model.Course.Enrollments != null && Model.Course.Enrollments.Any())
+            {
+                <table class="min-w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">اسم الطالب</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">نسبة الحضور</th>
+                            <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">تقييم المدرس</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">مميز</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">حفظ التقييم</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach (var enrollment in Model.Course.Enrollments.OrderBy(e => e.Student.Name))
+                        {
+                            <tr>
+                                <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">@enrollment.Student.Name</td>
+                                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 text-center">
+                                    @{
+                                        var totalDays = enrollment.Attendances.Count;
+                                        if (totalDays > 0)
+                                        {
+                                            var presentDays = enrollment.Attendances.Count(a => a.IsPresent);
+                                            var attendancePercentage = (presentDays * 100.0) / totalDays;
+                                            <span class="font-bold">@attendancePercentage.ToString("0.##")%</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-xs text-gray-400">لا يوجد سجل</span>
+                                        }
+                                    }
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap text-sm">
+                                    <select name="evaluation" form="form-@enrollment.Id" class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm rounded-md">
+                                        <option value="" selected="@(enrollment.TeacherEvaluation == null)">-- اختر تقييم --</option>
+                                        <option value="ممتاز" selected="@(enrollment.TeacherEvaluation == "ممتاز")">ممتاز</option>
+                                        <option value="جيد جداً" selected="@(enrollment.TeacherEvaluation == "جيد جداً")">جيد جداً</option>
+                                        <option value="جيد" selected="@(enrollment.TeacherEvaluation == "جيد")">جيد</option>
+                                        <option value="مقبول" selected="@(enrollment.TeacherEvaluation == "مقبول")">مقبول</option>
+                                        <option value="يحتاج تحسين" selected="@(enrollment.TeacherEvaluation == "يحتاج تحسين")">يحتاج تحسين</option>
+                                    </select>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap text-center">
+                                    <input type="checkbox" name="isExcellent" value="true" checked="@enrollment.IsExcellent" form="form-@enrollment.Id" class="h-5 w-5 text-amber-500 focus:ring-amber-400 border-gray-300 rounded" />
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap text-center">
+                                    <form method="post" id="form-@enrollment.Id">
+                                        <input type="hidden" name="enrollmentId" value="@enrollment.Id" />
+                                        <button type="submit" asp-page-handler="Evaluate" class="bg-emerald-600 text-white px-3 py-1.5 text-xs rounded-lg hover:bg-emerald-700 transition duration-200">
+                                            حفظ
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-center text-gray-500 py-4">لا يوجد طلاب مسجلين في هذه الدورة حتى الآن.</p>
+            }
+        </div>
+    </div>
+</div>
+

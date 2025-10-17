@@ -1,0 +1,71 @@
+﻿@page "{id:int}"
+@model MosqueDash.Pages.Courses.EditModel
+@{
+    ViewData["Title"] = "تعديل الدورة";
+}
+
+<div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+    <h1 class="text-2xl font-bold text-white mb-6 border-b border-gray-700 pb-4">@ViewData["Title"]: <span class="text-teal-400">@Model.Course.Name</span></h1>
+
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-red-400 mb-4 bg-red-900 bg-opacity-30 p-3 rounded-lg"></div>
+        <input type="hidden" asp-for="Course.Id" />
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Course Name -->
+            <div class="mb-4">
+                <label asp-for="Course.Name" class="block text-gray-300 text-sm font-bold mb-2">اسم الدورة</label>
+                <input asp-for="Course.Name" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 text-white bg-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-500" />
+                <span asp-validation-for="Course.Name" class="text-red-400 text-xs mt-1"></span>
+            </div>
+
+            <!-- Department -->
+            <div class="mb-4">
+                <label asp-for="Course.Department" class="block text-gray-300 text-sm font-bold mb-2">القسم</label>
+                <input asp-for="Course.Department" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 text-white bg-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-500" />
+                <span asp-validation-for="Course.Department" class="text-red-400 text-xs mt-1"></span>
+            </div>
+
+            <!-- Manager -->
+            <div class="mb-4">
+                <label asp-for="Course.Manager" class="block text-gray-300 text-sm font-bold mb-2">المسؤول عن الدورة</label>
+                <input asp-for="Course.Manager" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 text-white bg-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-500" />
+                <span asp-validation-for="Course.Manager" class="text-red-400 text-xs mt-1"></span>
+            </div>
+
+            <!-- Curriculum -->
+            <div class="mb-4">
+                <label asp-for="Course.Curriculum" class="block text-gray-300 text-sm font-bold mb-2">المنهج</label>
+                <input asp-for="Course.Curriculum" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 text-white bg-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-500" />
+                <span asp-validation-for="Course.Curriculum" class="text-red-400 text-xs mt-1"></span>
+            </div>
+
+            <!-- Start Date -->
+            <div class="mb-4">
+                <label asp-for="Course.StartDate" class="block text-gray-300 text-sm font-bold mb-2"></label>
+                <input asp-for="Course.StartDate" type="date" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 text-white bg-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-500" />
+                <span asp-validation-for="Course.StartDate" class="text-red-400 text-xs mt-1"></span>
+            </div>
+
+            <!-- End Date -->
+            <div class="mb-4">
+                <label asp-for="Course.EndDate" class="block text-gray-300 text-sm font-bold mb-2"></label>
+                <input asp-for="Course.EndDate" type="date" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 text-white bg-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-500" />
+                <span asp-validation-for="Course.EndDate" class="text-red-400 text-xs mt-1"></span>
+            </div>
+
+            <!-- Description -->
+            <div class="md:col-span-2 mb-4">
+                <label asp-for="Course.Description" class="block text-gray-300 text-sm font-bold mb-2"></label>
+                <textarea asp-for="Course.Description" rows="4" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 text-white bg-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+                <span asp-validation-for="Course.Description" class="text-red-400 text-xs mt-1"></span>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-end mt-6 gap-4">
+            <a asp-page="./Index" class="text-gray-300 bg-gray-600 hover:bg-gray-500 font-bold py-2 px-5 rounded-lg transition duration-300">إلغاء</a>
+            <button type="submit" class="bg-teal-600 hover:bg-teal-500 text-white font-bold py-2 px-5 rounded-lg transition duration-300">حفظ التعديلات</button>
+        </div>
+    </form>
+</div>
+
