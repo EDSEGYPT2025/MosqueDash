@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MosqueDash.Data.Models;
-using MosqueDash.Models;
+using MosqueDash.Data.Models;
 
 namespace MosqueDash.Pages.Students
 {
@@ -20,12 +20,12 @@ namespace MosqueDash.Pages.Students
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Student == null)
+            if (id == null || _context.Students == null)
             {
                 return NotFound();
             }
 
-            var student = await _context.Student.FirstOrDefaultAsync(m => m.StudentID == id);
+            var student = await _context.Students.FirstOrDefaultAsync(m => m.Id == id);
             if (student == null)
             {
                 return NotFound();
@@ -49,7 +49,7 @@ namespace MosqueDash.Pages.Students
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!StudentExists(Student.StudentID))
+                if (!StudentExists(Student.Id))
                 {
                     return NotFound();
                 }
@@ -64,7 +64,7 @@ namespace MosqueDash.Pages.Students
 
         private bool StudentExists(int id)
         {
-            return _context.Student.Any(e => e.StudentID == id);
+            return _context.Students.Any(e => e.Id == id);
         }
     }
 }

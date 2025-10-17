@@ -33,7 +33,7 @@ namespace MosqueDash.Data.Models
         public DateTime? EndDate { get; set; }
 
         // Navigation property for the many-to-many relationship
-        public ICollection<Enrollment> Enrollments { get; set; }
+        public ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
     }
 }
 
