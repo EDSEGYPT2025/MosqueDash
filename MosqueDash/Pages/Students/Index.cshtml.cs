@@ -1,46 +1,71 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using MosqueDash.Data;
 using MosqueDash.Data.Models;
+using MosqueDash.Helpers;
+
 
 namespace MosqueDash.Pages.Students
 {
     public class IndexModel : PageModel
     {
-        private readonly ApplicationDbContext _context;
+        private readonly MosqueDash.Data.ApplicationDbContext _context;
+        private readonly IConfiguration Configuration;
 
-        public IndexModel(ApplicationDbContext context)
+
+        public IndexModel(MosqueDash.Data.ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
+            Configuration = configuration;
         }
 
-        public IList<Student> Students { get; set; }
+        public string NameSort { get; set; }
+        public string CurrentFilter { get; set; }
+        public EducationType? CurrentEducationType { get; set; }
+        public EducationStage? CurrentEducationStage { get; set; }
 
-        [BindProperty(SupportsGet = true)]
-        public string SearchTerm { get; set; }
 
-        public string CurrentSearch { get; set; }
+        public PaginatedList<Student> Students { get; set; } = default!;
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string sortOrder, string searchString, int? pageIndex, EducationType? educationType, EducationStage? educationStage)
         {
-            var studentsQuery = _context.Students
-                .Include(s => s.Enrollments)
-                .AsNoTracking()
-                .AsQueryable();
+            NameSort = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            CurrentFilter = searchString;
+            CurrentEducationType = educationType;
+            CurrentEducationStage = educationStage;
 
-            if (!string.IsNullOrEmpty(SearchTerm))
+
+            IQueryable<Student> studentsIQ = from s in _context.Students
+                                             select s;
+
+            if (!String.IsNullOrEmpty(searchString))
             {
-                CurrentSearch = SearchTerm;
-                studentsQuery = studentsQuery.Where(s => s.Name.Contains(SearchTerm)
-                                                      || s.PhoneNumber.Contains(SearchTerm));
+                studentsIQ = studentsIQ.Where(s => s.Name.Contains(searchString)
+                                       || s.PhoneNumber.Contains(searchString));
             }
 
-            Students = await studentsQuery.OrderBy(s => s.Name).ToListAsync();
+            if (educationType.HasValue)
+            {
+                studentsIQ = studentsIQ.Where(s => s.EducationType == educationType.Value);
+            }
+
+            if (educationStage.HasValue)
+            {
+                studentsIQ = studentsIQ.Where(s => s.EducationStage == educationStage.Value);
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    studentsIQ = studentsIQ.OrderByDescending(s => s.Name);
+                    break;
+                default:
+                    studentsIQ = studentsIQ.OrderBy(s => s.Name);
+                    break;
+            }
+
+            var pageSize = Configuration.GetValue("PageSize", 4);
+            Students = await PaginatedList<Student>.CreateAsync(
+                studentsIQ.AsNoTracking(), pageIndex ?? 1, pageSize);
         }
     }
 }
-

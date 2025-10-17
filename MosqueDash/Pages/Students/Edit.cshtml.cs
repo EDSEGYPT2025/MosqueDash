@@ -1,47 +1,41 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using MosqueDash.Data;
 using MosqueDash.Data.Models;
-using System.Linq;
-using System.Threading.Tasks;
+using MosqueDash.Models;
 
 namespace MosqueDash.Pages.Students
 {
     public class EditModel : PageModel
     {
-        private readonly ApplicationDbContext _context;
+        private readonly MosqueDash.Data.ApplicationDbContext _context;
 
-        public EditModel(ApplicationDbContext context)
+        public EditModel(MosqueDash.Data.ApplicationDbContext context)
         {
             _context = context;
         }
 
         [BindProperty]
-        public Student Student { get; set; }
+        public Student Student { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null)
+            if (id == null || _context.Student == null)
             {
                 return NotFound();
             }
 
-            Student = await _context.Students.FirstOrDefaultAsync(m => m.Id == id);
-
-            if (Student == null)
+            var student = await _context.Student.FirstOrDefaultAsync(m => m.StudentID == id);
+            if (student == null)
             {
                 return NotFound();
             }
+            Student = student;
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // Ignore the Enrollments collection during model validation
-            // as it's not being edited on this page.
-            ModelState.Remove("Student.Enrollments");
-
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -55,7 +49,7 @@ namespace MosqueDash.Pages.Students
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!StudentExists(Student.Id))
+                if (!StudentExists(Student.StudentID))
                 {
                     return NotFound();
                 }
@@ -70,7 +64,7 @@ namespace MosqueDash.Pages.Students
 
         private bool StudentExists(int id)
         {
-            return _context.Students.Any(e => e.Id == id);
+            return _context.Student.Any(e => e.StudentID == id);
         }
     }
 }

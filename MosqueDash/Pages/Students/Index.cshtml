@@ -1,67 +1,99 @@
 ﻿@page
 @model MosqueDash.Pages.Students.IndexModel
+
 @{
-    ViewData["Title"] = "إدارة الطلاب";
-    ViewData["PageTitle"] = "قائمة الطلاب";
+    ViewData["Title"] = "الطلاب";
 }
 
-<div class="container mx-auto">
-    <div class="bg-white rounded-lg shadow-md">
-        <div class="p-4 border-b">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-semibold text-gray-700">جميع الطلاب المسجلين</h2>
-                <a asp-page="Create" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition duration-200 flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    إضافة طالب جديد
-                </a>
-            </div>
-            <!-- Search Form -->
-            <form method="get" class="mt-4">
-                <div class="flex">
-                    <input type="text" name="SearchTerm" value="@Model.SearchTerm" placeholder="ابحث بالاسم أو رقم الهاتف..." class="flex-grow px-3 py-2 bg-white border border-gray-300 rounded-r-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" />
-                    <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded-l-lg hover:bg-emerald-700 transition duration-200">بحث</button>
-                </div>
-            </form>
-        </div>
-        <div class="p-4">
-            <table class="min-w-full">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">اسم الطالب</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">اسم ولي الأمر</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">العمر</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">رقم الهاتف</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">الدورات المسجل بها</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">إجراءات</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @foreach (var student in Model.Students)
-                    {
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <!-- Student name is now a link to the details page -->
-                                <a asp-page="./Details" asp-route-id="@student.Id" class="text-indigo-600 hover:text-indigo-900 font-semibold">
-                                    @student.Name
-                                </a>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">@student.GuardianName</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">@student.Age</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">@student.PhoneNumber</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 text-center">@student.Enrollments.Count</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium space-x-4">
-                                <a asp-page="./Details" asp-route-id="@student.Id" class="text-green-600 hover:text-green-900">تفاصيل</a>
-                                <a asp-page="Enroll" asp-route-id="@student.Id" class="text-indigo-600 hover:text-indigo-900">تسجيل</a>
-                                <a asp-page="./Edit" asp-route-id="@student.Id" class="text-sky-600 hover:text-sky-900">تعديل</a>
-                                <a asp-page="./Delete" asp-route-id="@student.Id" class="text-red-600 hover:text-red-900">حذف</a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
+<div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl font-bold">@ViewData["Title"]</h1>
+    <a asp-page="Create" class="bg-emerald-500 text-white font-bold py-2 px-4 rounded hover:bg-emerald-700">
+        إضافة طالب جديد
+    </a>
 </div>
+
+<form asp-page="./Index" method="get" class="bg-white p-4 rounded-lg shadow-sm mb-4 border">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <input type="text" name="SearchString" placeholder="ابحث بالاسم أو رقم الهاتف..." value="@Model.CurrentFilter" class="col-span-1 md:col-span-2 p-2 border rounded-md" />
+
+        <select name="educationType" asp-for="CurrentEducationType" asp-items="Html.GetEnumSelectList<MosqueDash.Models.EducationType>()" onchange="this.form.submit()" class="p-2 border rounded-md bg-white">
+            <option value="">-- فلترة بنوع التعليم --</option>
+        </select>
+
+        <select name="educationStage" asp-for="CurrentEducationStage" asp-items="Html.GetEnumSelectList<MosqueDash.Models.EducationStage>()" onchange="this.form.submit()" class="p-2 border rounded-md bg-white">
+            <option value="">-- فلترة بالمرحلة --</option>
+        </select>
+    </div>
+</form>
+
+
+<div class="overflow-x-auto bg-white rounded-lg shadow border">
+    <table class="w-full text-sm text-right text-gray-500">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    <a asp-page="./Index" asp-route-sortOrder="@Model.NameSort" asp-route-currentFilter="@Model.CurrentFilter">
+                        @Html.DisplayNameFor(model => model.Students[0].Name)
+                    </a>
+                </th>
+                <th scope="col" class="px-6 py-3">@Html.DisplayNameFor(model => model.Students[0].EducationType)</th>
+                <th scope="col" class="px-6 py-3">@Html.DisplayNameFor(model => model.Students[0].EducationStage)</th>
+                <th scope="col" class="px-6 py-3">@Html.DisplayNameFor(model => model.Students[0].GuardianName)</th>
+                <th scope="col" class="px-6 py-3">@Html.DisplayNameFor(model => model.Students[0].PhoneNumber)</th>
+                <th scope="col" class="px-6 py-3"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Students)
+            {
+                <tr class="bg-white border-b hover:bg-gray-50">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </th>
+                    <td class="px-6 py-4">@Html.DisplayFor(modelItem => item.EducationType)</td>
+                    <td class="px-6 py-4">@Html.DisplayFor(modelItem => item.EducationStage)</td>
+                    <td class="px-6 py-4">@Html.DisplayFor(modelItem => item.GuardianName)</td>
+                    <td class="px-6 py-4">@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
+                    <td class="px-6 py-4 flex items-center gap-4">
+                        <a asp-page="./Edit" asp-route-id="@item.Id" class="font-medium text-blue-600 hover:underline">تعديل</a>
+                        <a asp-page="./Details" asp-route-id="@item.Id" class="font-medium text-emerald-600 hover:underline">تفاصيل</a>
+                        <a asp-page="./Delete" asp-route-id="@item.Id" class="font-medium text-red-600 hover:underline">حذف</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@{
+    var prevDisabled = !Model.Students.HasPreviousPage ? "opacity-50 cursor-not-allowed" : "";
+    var nextDisabled = !Model.Students.HasNextPage ? "opacity-50 cursor-not-allowed" : "";
+}
+
+<div class="mt-4 flex justify-center items-center gap-4">
+    <a asp-page="./Index"
+       asp-route-sortOrder="@Model.NameSort"
+       asp-route-pageIndex="@(Model.Students.PageIndex - 1)"
+       asp-route-currentFilter="@Model.CurrentFilter"
+       asp-route-educationType="@Model.CurrentEducationType"
+       asp-route-educationStage="@Model.CurrentEducationStage"
+       class="px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-md hover:bg-gray-900 @prevDisabled">
+        السابق
+    </a>
+
+    <span class="text-sm text-gray-700">
+        صفحة @Model.Students.PageIndex من @Model.Students.TotalPages
+    </span>
+
+    <a asp-page="./Index"
+       asp-route-sortOrder="@Model.NameSort"
+       asp-route-pageIndex="@(Model.Students.PageIndex + 1)"
+       asp-route-currentFilter="@Model.CurrentFilter"
+       asp-route-educationType="@Model.CurrentEducationType"
+       asp-route-educationStage="@Model.CurrentEducationStage"
+       class="px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-md hover:bg-gray-900 @nextDisabled">
+        التالي
+    </a>
+</div>
+
 

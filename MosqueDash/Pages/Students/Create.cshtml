@@ -1,61 +1,74 @@
 ﻿@page
 @model MosqueDash.Pages.Students.CreateModel
+
 @{
     ViewData["Title"] = "إضافة طالب جديد";
-    ViewData["PageTitle"] = "إضافة طالب";
 }
 
-<div class="container mx-auto">
-    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md">
-        <div class="p-4 border-b">
-            <h2 class="text-lg font-semibold text-gray-700">بيانات الطالب الجديد</h2>
+<h1 class="text-2xl font-bold mb-4">@ViewData["Title"]</h1>
+<hr class="mb-4" />
+
+<div class="max-w-2xl">
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert"></div>
+
+        <div class="mb-4">
+            <label asp-for="Student.Name" class="block text-gray-700 text-sm font-bold mb-2"></label>
+            <input asp-for="Student.Name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+            <span asp-validation-for="Student.Name" class="text-red-500 text-xs italic"></span>
         </div>
-        <div class="p-6">
-            <form method="post">
-                <div asp-validation-summary="ModelOnly" class="text-red-600 text-sm mb-4"></div>
 
-                <div class="grid grid-cols-1 gap-6">
-                    <!-- Student Name & Age -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label asp-for="Student.Name" class="block text-sm font-medium text-gray-700 mb-1">اسم الطالب</label>
-                            <input asp-for="Student.Name" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" />
-                            <span asp-validation-for="Student.Name" class="text-red-500 text-xs mt-1"></span>
-                        </div>
-                        <div>
-                            <label asp-for="Student.Age" class="block text-sm font-medium text-gray-700 mb-1">العمر</label>
-                            <input asp-for="Student.Age" type="number" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" />
-                        </div>
-                    </div>
-
-                    <!-- Guardian Name & Phone Number -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label asp-for="Student.GuardianName" class="block text-sm font-medium text-gray-700 mb-1">اسم ولي الأمر</label>
-                            <input asp-for="Student.GuardianName" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" />
-                        </div>
-                        <div>
-                            <label asp-for="Student.PhoneNumber" class="block text-sm font-medium text-gray-700 mb-1">رقم الهاتف</label>
-                            <input asp-for="Student.PhoneNumber" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" />
-                        </div>
-                    </div>
-
-                    <!-- Notes -->
-                    <div>
-                        <label asp-for="Student.Notes" class="block text-sm font-medium text-gray-700 mb-1">ملاحظات</label>
-                        <textarea asp-for="Student.Notes" rows="4" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"></textarea>
-                    </div>
-                </div>
-
-                <div class="mt-6 flex justify-end">
-                    <a asp-page="Index" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition duration-200 mr-2">
-                        إلغاء
-                    </a>
-                    <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition duration-200">
-                        حفظ الطالب
-                    </button>
-                </div>
-            </form>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+         
+            <div class="mb-4">
+                <label asp-for="Student.Age" class="block text-gray-700 text-sm font-bold mb-2"></label>
+                <input asp-for="Student.Age" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                <span asp-validation-for="Student.Age" class="text-red-500 text-xs italic"></span>
+            </div>
         </div>
-    </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="mb-4">
+                <label asp-for="Student.GuardianName" class="block text-gray-700 text-sm font-bold mb-2"></label>
+                <input asp-for="Student.GuardianName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                <span asp-validation-for="Student.GuardianName" class="text-red-500 text-xs italic"></span>
+            </div>
+            <div class="mb-4">
+                <label asp-for="Student.PhoneNumber" class="block text-gray-700 text-sm font-bold mb-2"></label>
+                <input asp-for="Student.PhoneNumber" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                <span asp-validation-for="Student.PhoneNumber" class="text-red-500 text-xs italic"></span>
+            </div>
+        </div>
+
+        <!-- New Fields for Education Type and Stage -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="mb-4">
+                <label asp-for="Student.EducationType" class="block text-gray-700 text-sm font-bold mb-2"></label>
+                <select asp-for="Student.EducationType" asp-items="Html.GetEnumSelectList<MosqueDash.Models.EducationType>()" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white">
+                    <option value="">-- اختر نوع التعليم --</option>
+                </select>
+                <span asp-validation-for="Student.EducationType" class="text-red-500 text-xs italic"></span>
+            </div>
+            <div class="mb-4">
+                <label asp-for="Student.EducationStage" class="block text-gray-700 text-sm font-bold mb-2"></label>
+                <select asp-for="Student.EducationStage" asp-items="Html.GetEnumSelectList<MosqueDash.Models.EducationStage>()" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white">
+                    <option value="">-- اختر المرحلة التعليمية --</option>
+                </select>
+                <span asp-validation-for="Student.EducationStage" class="text-red-500 text-xs italic"></span>
+            </div>
+        </div>
+
+
+        <div class="flex items-center gap-4 mt-4">
+            <input type="submit" value="إضافة الطالب" class="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer" />
+            <a asp-page="Index" class="inline-block align-baseline font-bold text-sm text-gray-500 hover:text-gray-800">
+                العودة إلى القائمة
+            </a>
+        </div>
+    </form>
 </div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
